@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Event Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-8">
+<div class="max-w-7xl mx-auto bg-white p-6 sm:p-10 rounded-xl shadow-lg">
+    <h1 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-8">Campus Event Manager</h1>
+    <p id="message-box" class="text-center font-medium text-lg mb-4 hidden"></p>
+
+    <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
+        <button class="tab-button bg-indigo-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-indigo-700 transition duration-300" data-tab="students">Students</button>
+        <button class="tab-button bg-gray-200 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-300 transition duration-300" data-tab="colleges">Colleges</button>
+        <button class="tab-button bg-gray-200 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-300 transition duration-300" data-tab="events">Events</button>
+        <button class="tab-button bg-gray-200 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-300 transition duration-300" data-tab="registrations">Registrations</button>
+        <button class="tab-button bg-gray-200 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-300 transition duration-300" data-tab="reports">Reports</button>
+    </div>
+
+    <!-- Student Section -->
+    <div id="students-tab" class="tab-content active">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Create Student Form -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h2 class="text-2xl font-semibold mb-4">Create New Student</h2>
+                <form id="create-student-form">
+                    <div class="mb-4">
+                        <label for="student-name" class="block text-gray-700 font-medium mb-1">Name</label>
+                        <input type="text" id="student-name" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="student-email" class="block text-gray-700 font-medium mb-1">Email</label>
+                        <input type="email" id="student-email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="student-college-id" class="block text-gray-700 font-medium mb-1">College</label>
+                        <select id="student-college-id" name="collegeId" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                            <option value="">Select a college</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white font-semibold py-2 rounded-lg shadow-md hover:bg-green-700 transition duration-300">Create Student</button>
+                </form>
+            </div>
+            <!-- Student List -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h2 class="text-2xl font-semibold mb-4">All Students</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead class="bg-gray-200">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">ID</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Name</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Email</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">College</th>
+                        </tr>
+                        </thead>
+                        <tbody id="students-list">
+                        <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- College Section -->
+    <div id="colleges-tab" class="tab-content hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Create College Form -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h2 class="text-2xl font-semibold mb-4">Create New College</h2>
+                <form id="create-college-form">
+                    <div class="mb-6">
+                        <label for="college-name" class="block text-gray-700 font-medium mb-1">Name</label>
+                        <input type="text" id="college-name" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white font-semibold py-2 rounded-lg shadow-md hover:bg-green-700 transition duration-300">Create College</button>
+                </form>
+            </div>
+            <!-- College List -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h2 class="text-2xl font-semibold mb-4">All Colleges</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead class="bg-gray-200">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">ID</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Name</th>
+                        </tr>
+                        </thead>
+                        <tbody id="colleges-list">
+                        <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Section -->
+    <div id="events-tab" class="tab-content hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Create Event Form -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h2 class="text-2xl font-semibold mb-4">Create New Event</h2>
+                <form id="create-event-form">
+                    <div class="mb-4">
+                        <label for="event-name" class="block text-gray-700 font-medium mb-1">Name</label>
+                        <input type="text" id="event-name" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="event-type" class="block text-gray-700 font-medium mb-1">Type</label>
+                        <input type="text" id="event-type" name="type" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="event-date" class="block text-gray-700 font-medium mb-1">Date</label>
+                        <input type="date" id="event-date" name="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="event-college-id" class="block text-gray-700 font-medium mb-1">College</label>
+                        <select id="event-college-id" name="collegeId" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                            <option value="">Select a college</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white font-semibold py-2 rounded-lg shadow-md hover:bg-green-700 transition duration-300">Create Event</button>
+                </form>
+            </div>
+            <!-- Event List -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h2 class="text-2xl font-semibold mb-4">All Events</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead class="bg-gray-200">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">ID</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Name</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Type</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Date</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">College</th>
+                        </tr>
+                        </thead>
+                        <tbody id="events-list">
+                        <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Section -->
+    <div id="registrations-tab" class="tab-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Register Form -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h2 class="text-2xl font-semibold mb-4">Register for an Event</h2>
+                <form id="register-form">
+                    <div class="mb-4">
+                        <label for="register-student-id" class="block text-gray-700 font-medium mb-1">Student</label>
+                        <select id="register-student-id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                            <option value="">Select a student</option>
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <label for="register-event-id" class="block text-gray-700 font-medium mb-1">Event</label>
+                        <select id="register-event-id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                            <option value="">Select an event</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white font-semibold py-2 rounded-lg shadow-md hover:bg-green-700 transition duration-300">Register</button>
+                </form>
+            </div>
+            <!-- Registration List -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner col-span-1 lg:col-span-2">
+                <h2 class="text-2xl font-semibold mb-4">All Registrations</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead class="bg-gray-200">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">ID</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Student</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Event</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Attended</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Feedback</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="registrations-list">
+                        <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports Section -->
+    <div id="reports-tab" class="tab-content hidden">
+        <h2 class="text-2xl font-semibold mb-4">Reports</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Event Popularity Report -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h3 class="text-xl font-semibold mb-4">Event Popularity</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead class="bg-gray-200">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Event</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Registrations</th>
+                        </tr>
+                        </thead>
+                        <tbody id="report-popularity-list">
+                        <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Student Participation Report -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h3 class="text-xl font-semibold mb-4">Student Participation</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead class="bg-gray-200">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Student</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Attended Events</th>
+                        </tr>
+                        </thead>
+                        <tbody id="report-participation-list">
+                        <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Top 3 Most Active Students Report -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h3 class="text-xl font-semibold mb-4">Top 3 Active Students</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm">
+                        <thead class="bg-gray-200">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Student</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Attended Events</th>
+                        </tr>
+                        </thead>
+                        <tbody id="report-top-students-list">
+                        <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const BASE_URL = 'http://localhost:8080/api';
+    const messageBox = document.getElementById('message-box');
+
+    // Helper function to show messages
+    const showMessage = (message, isError = false) => {
+        messageBox.textContent = message;
+        messageBox.className = `text-center font-medium text-lg mb-4 block ${isError ? 'text-red-500' : 'text-green-600'}`;
+        setTimeout(() => {
+            messageBox.classList.add('hidden');
+        }, 5000);
+    };
+
+    // Tab functionality
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    const switchTab = (tabName) => {
+        tabButtons.forEach(button => {
+            button.classList.remove('bg-indigo-600', 'hover:bg-indigo-700', 'text-white');
+            button.classList.add('bg-gray-200', 'hover:bg-gray-300', 'text-gray-800');
+        });
+        tabContents.forEach(content => {
+            content.classList.add('hidden');
+        });
+
+        const activeButton = document.querySelector(`.tab-button[data-tab="${tabName}"]`);
+        activeButton.classList.remove('bg-gray-200', 'hover:bg-gray-300', 'text-gray-800');
+        activeButton.classList.add('bg-indigo-600', 'hover:bg-indigo-700', 'text-white');
+        document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+
+        // Fetch data for the active tab
+        if (tabName === 'students') {
+            fetchStudents();
+            fetchCollegesForDropdowns();
+        } else if (tabName === 'colleges') {
+            fetchColleges();
+        } else if (tabName === 'events') {
+            fetchEvents();
+            fetchCollegesForDropdowns();
+        } else if (tabName === 'registrations') {
+            fetchStudentsForRegistration();
+            fetchEventsForRegistration();
+            fetchRegistrations();
+        } else if (tabName === 'reports') {
+            fetchReports();
+        }
+    };
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            switchTab(button.dataset.tab);
+        });
+    });
+
+    // ======================================================================
+    // API FUNCTIONS
+    // ======================================================================
+
+    // --- Colleges ---
+    const fetchColleges = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/colleges`);
+            if (!response.ok) throw new Error('Failed to fetch colleges.');
+            const colleges = await response.json();
+            const list = document.getElementById('colleges-list');
+            list.innerHTML = '';
+            colleges.forEach(college => {
+                const row = document.createElement('tr');
+                row.className = 'border-b last:border-b-0';
+                row.innerHTML = `
+                    <td class="px-4 py-2 text-sm text-gray-800">${college.id}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800">${college.name}</td>
+                `;
+                list.appendChild(row);
+            });
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, true);
+        }
+    };
+
+    const fetchCollegesForDropdowns = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/colleges`);
+            if (!response.ok) throw new Error('Failed to fetch colleges.');
+            const colleges = await response.json();
+
+            const studentCollegeSelect = document.getElementById('student-college-id');
+            const eventCollegeSelect = document.getElementById('event-college-id');
+
+            studentCollegeSelect.innerHTML = '<option value="">Select a college</option>';
+            eventCollegeSelect.innerHTML = '<option value="">Select a college</option>';
+
+            colleges.forEach(college => {
+                const option = document.createElement('option');
+                option.value = college.id;
+                option.textContent = college.name;
+                studentCollegeSelect.appendChild(option);
+                eventCollegeSelect.appendChild(option.cloneNode(true));
+            });
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, true);
+        }
+    };
+
+    // --- Students ---
+    const fetchStudents = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/students`);
+            if (!response.ok) throw new Error('Failed to fetch students.');
+            const students = await response.json();
+            const list = document.getElementById('students-list');
+            list.innerHTML = '';
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.className = 'border-b last:border-b-0';
+                row.innerHTML = `
+                    <td class="px-4 py-2 text-sm text-gray-800">${student.id}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800">${student.name}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800">${student.email}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800">${student.college ? student.college.name : 'N/A'}</td>
+                `;
+                list.appendChild(row);
+            });
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, true);
+        }
+    };
+
+    const fetchStudentsForRegistration = async () => {
+         try {
+            const response = await fetch(`${BASE_URL}/students`);
+            if (!response.ok) throw new Error('Failed to fetch students.');
+            const students = await response.json();
+            const select = document.getElementById('register-student-id');
+            select.innerHTML = '<option value="">Select a student</option>';
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.name} (${student.id})`;
+                select.appendChild(option);
+            });
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, true);
+        }
+    };
+
+    // --- Events ---
+    const fetchEvents = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/events`);
+            if (!response.ok) throw new Error('Failed to fetch events.');
+            const events = await response.json();
+            const list = document.getElementById('events-list');
+            list.innerHTML = '';
+            events.forEach(event => {
+                const row = document.createElement('tr');
+                row.className = 'border-b last:border-b-0';
+                row.innerHTML = `
+                    <td class="px-4 py-2 text-sm text-gray-800">${event.id}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800">${event.name}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800">${event.type}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800">${event.date}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800">${event.college ? event.college.name : 'N/A'}</td>
+                `;
+                list.appendChild(row);
+            });
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, true);
+        }
+    };
+
+    const fetchEventsForRegistration = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/events`);
+            if (!response.ok) throw new Error('Failed to fetch events.');
+            const events = await response.json();
+            const select = document.getElementById('register-event-id');
+            select.innerHTML = '<option value="">Select an event</option>';
+            events.forEach(event => {
+                const option = document.createElement('option');
+                option.value = event.id;
+                option.textContent = `${event.name} (${event.id}) - ${event.date}`;
+                select.appendChild(option);
+            });
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, true);
+        }
+    };
+
+    // --- Registrations ---
+    const fetchRegistrations = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/registrations`);
+            if (!response.ok) throw new Error('Failed to fetch registrations.');
+            const registrations = await response.json();
+            const list = document.getElementById('registrations-list');
+            list.innerHTML = '';
+            registrations.forEach(reg => {
+                const row = document.createElement('tr');
+                row.className = 'border-b last:border-b-0';
+                row.innerHTML = `
+                    <td class="px-4 py-2 text-sm text-gray-800">${reg.id}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800">${reg.student.name}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800">${reg.event.name}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800">${reg.attended ? 'Yes' : 'No'}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800">${reg.feedback || 'N/A'}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800 space-x-2">
+                        <button onclick="markAttendance(${reg.id}, ${!reg.attended})" class="bg-blue-500 text-white text-xs px-2 py-1 rounded-md hover:bg-blue-600 transition duration-300">${reg.attended ? 'Un-mark' : 'Mark'} Attendance</button>
+                        <button onclick="collectFeedback(${reg.id})" class="bg-yellow-500 text-white text-xs px-2 py-1 rounded-md hover:bg-yellow-600 transition duration-300">Feedback</button>
+                    </td>
+                `;
+                list.appendChild(row);
+            });
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, true);
+        }
+    };
+
+    const markAttendance = async (id, attended) => {
+        try {
+            const response = await fetch(`${BASE_URL}/registrations/${id}/attendance?attended=${attended}`, {
+                method: 'PUT'
+            });
+            if (!response.ok) throw new Error('Failed to mark attendance.');
+            showMessage('Attendance updated successfully!');
+            fetchRegistrations();
+            fetchReports();
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, true);
+        }
+    };
+
+    const collectFeedback = async (id) => {
+        const rating = prompt("Please enter a feedback rating (1-5):");
+        if (rating === null || rating === '') return;
+        const feedback = parseInt(rating);
+        if (isNaN(feedback) || feedback < 1 || feedback > 5) {
+            showMessage("Invalid rating. Please enter a number between 1 and 5.", true);
+            return;
+        }
+        try {
+            const response = await fetch(`${BASE_URL}/registrations/${id}/feedback?rating=${feedback}`, {
+                method: 'PUT'
+            });
+            if (!response.ok) throw new Error('Failed to submit feedback.');
+            showMessage('Feedback submitted successfully!');
+            fetchRegistrations();
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, true);
+        }
+    };
+
+    // --- Reports ---
+    const fetchReports = async () => {
+        try {
+            const popularityResponse = await fetch(`${BASE_URL}/reports/event-popularity`);
+            const popularityData = await popularityResponse.json();
+            renderReport('report-popularity-list', popularityData, ['event', 'registrations']);
+
+            const participationResponse = await fetch(`${BASE_URL}/reports/student-participation`);
+            const participationData = await participationResponse.json();
+            renderReport('report-participation-list', participationData, ['student', 'attendedEvents']);
+
+            const topStudentsResponse = await fetch(`${BASE_URL}/reports/top-active-students`);
+            const topStudentsData = await topStudentsResponse.json();
+            renderReport('report-top-students-list', topStudentsData, ['student', 'attendedEvents']);
+        } catch (error) {
+            showMessage(`Error fetching reports: ${error.message}`, true);
+        }
+    };
+
+    const renderReport = (tableId, data, keys) => {
+        const list = document.getElementById(tableId);
+        list.innerHTML = '';
+        if (data.length === 0) {
+            list.innerHTML = `<tr><td colspan="2" class="px-4 py-2 text-center text-gray-500">No data available.</td></tr>`;
+            return;
+        }
+        data.forEach(item => {
+            const row = document.createElement('tr');
+            row.className = 'border-b last:border-b-0';
+            row.innerHTML = `
+                <td class="px-4 py-2 text-sm text-gray-800">${item[keys[0]]}</td>
+                <td class="px-4 py-2 text-sm text-gray-800">${item[keys[1]]}</td>
+            `;
+            list.appendChild(row);
+        });
+    };
+
+    // ======================================================================
+    // FORM SUBMISSIONS
+    // ======================================================================
+
+    // Create College Form
+    document.getElementById('create-college-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('college-name').value;
+        try {
+            const response = await fetch(`${BASE_URL}/colleges`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+            if (!response.ok) throw new Error('Failed to create college.');
+            showMessage('College created successfully!');
+            document.getElementById('create-college-form').reset();
+            fetchColleges();
+            fetchCollegesForDropdowns();
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, true);
+        }
+    });
+
+    // Create Student Form
+    document.getElementById('create-student-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('student-name').value;
+        const email = document.getElementById('student-email').value;
+        const collegeId = document.getElementById('student-college-id').value;
+        try {
+            const response = await fetch(`${BASE_URL}/students`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, college: { id: collegeId } })
+            });
+            if (!response.ok) throw new Error('Failed to create student.');
+            showMessage('Student created successfully!');
+            document.getElementById('create-student-form').reset();
+            fetchStudents();
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, true);
+        }
+    });
+
+    // Create Event Form
+    document.getElementById('create-event-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('event-name').value;
+        const type = document.getElementById('event-type').value;
+        const date = document.getElementById('event-date').value;
+        const collegeId = document.getElementById('event-college-id').value;
+        try {
+            const response = await fetch(`${BASE_URL}/events`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, type, date, college: { id: collegeId } })
+            });
+            if (!response.ok) throw new Error('Failed to create event.');
+            showMessage('Event created successfully!');
+            document.getElementById('create-event-form').reset();
+            fetchEvents();
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, true);
+        }
+    });
+
+    // Register Form
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const studentId = document.getElementById('register-student-id').value;
+        const eventId = document.getElementById('register-event-id').value;
+        try {
+            const response = await fetch(`${BASE_URL}/registrations/register?studentId=${studentId}&eventId=${eventId}`, {
+                method: 'POST'
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Failed to register student.');
+            }
+            showMessage('Student registered successfully!');
+            document.getElementById('register-form').reset();
+            fetchRegistrations();
+            fetchReports();
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, true);
+        }
+    });
+
+    // Initial fetch on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        switchTab('students');
+    });
+</script>
+</body>
+</html>
